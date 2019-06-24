@@ -1,2 +1,2 @@
 # decision-bracket
-A bracket-style decision tree to make difficult decisions written in C++
+A bracket-style decision tree to easily make difficult decisions written in C++
