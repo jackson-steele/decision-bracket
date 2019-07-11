@@ -20,21 +20,6 @@ void option::SetName(std::string name)
   m_name = name;
 }
 
-std::string option::GetTags() const
-{
-  std::stringstream ss;
-  for (int i = 0; i < m_tags.size(); i++)
-  {
-    ss << m_tags.at(i) << " ";
-  }
-  return ss.str();
-}
-
-void option::SetTags(std::string newTag)
-{
-  m_tags.push_back(newTag);
-}
-
 int option::GetNumWins() const
 {
   return m_numWins;

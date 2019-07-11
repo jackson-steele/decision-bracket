@@ -101,7 +101,6 @@ void OpenFile(std::string fileName, std::vector<option> &myVector, std::stack<op
     std::istringstream iss(temp);
     std::getline(iss, name, ',');
     std::getline(iss, wins, ',');
-    //TODO: Add functionality for tags
     newOption.SetName(name);
     newOption.SetNumWins(stoi(wins));
     myVector.push_back(newOption);

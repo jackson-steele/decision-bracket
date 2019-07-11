@@ -10,8 +10,6 @@ public:
   ~option();
   std::string GetName() const;
   void SetName(std::string name);
-  std::string GetTags() const;
-  void SetTags(std::string newTag);
   int GetNumWins() const;
   void SetNumWins(int numWins);
   void IncrementNumWins();
