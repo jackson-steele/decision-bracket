@@ -6,6 +6,7 @@
 #include <sstream>
 #include "option.h"
 
+//This function runs first and gathers preferred settings from the user
 std::string SetPreferences()
 {
   std::string dataType;
@@ -20,7 +21,7 @@ std::string SetPreferences()
   std::cout << std::endl;
 
   std::ifstream ifs;
-  std::string fileName = dataType + ".txt";
+  std::string fileName = dataType + ".csv";
 
   ifs.open(fileName);
   if (!ifs.is_open())
@@ -64,6 +65,7 @@ std::string SetPreferences()
   return returnString;
 }
 
+//A function to check if two words are the same (case-insensitive)
 bool SameWord(std::string wordOne, std::string wordTwo)
 {
   for (int i = 0; i < wordOne.size(); i++)
@@ -85,7 +87,6 @@ void OpenFile(std::string fileName, std::vector<option> &myVector, std::stack<op
 {
   std::ifstream ifs;
   std::string temp;
-  std::stringstream ss;
 
   ifs.open(fileName);
   if (!ifs.is_open())
@@ -96,11 +97,13 @@ void OpenFile(std::string fileName, std::vector<option> &myVector, std::stack<op
   {
     option newOption;
     std::string name;
-    int wins;
-    std::stringstream ss(temp);
-    ss >> name >> wins;
+    std::string wins;
+    std::istringstream iss(temp);
+    std::getline(iss, name, ',');
+    std::getline(iss, wins, ',');
+    //TODO: Add functionality for tags
     newOption.SetName(name);
-    newOption.SetNumWins(wins);
+    newOption.SetNumWins(stoi(wins));
     myVector.push_back(newOption);
     myStack.push(newOption);
   }
@@ -119,11 +122,11 @@ void WriteFile(std::string fileName, std::vector<option> myVector, std::string w
   {
     if (myVector.at(i).GetName() == winnerName)
     {
-      ofs << myVector.at(i).GetName() << " " << std::to_string(myVector.at(i).GetNumWins() + 1) << std::endl;
+      ofs << myVector.at(i).GetName() << "," << std::to_string(myVector.at(i).GetNumWins() + 1) << std::endl;
     }
     else
     {
-      ofs << myVector.at(i).GetName() << " " << std::to_string(myVector.at(i).GetNumWins()) << std::endl;
+      ofs << myVector.at(i).GetName() << "," << std::to_string(myVector.at(i).GetNumWins()) << std::endl;
     }
   }
 }
@@ -149,15 +152,17 @@ int FindMax(std::vector<option> vctr)
   return max;
 }
 
+//This function collects a list of all bracket options, including from a file.
 void CollectOptions(std::stack<option> &stack, std::vector<option> &optionVector, bool useOldDataBool, std::string fileName)
 {
   std::string optionName;
 
-  if (useOldDataBool)
+  if (useOldDataBool)//If we're reading from a file (per user preferences and file availability)
   {
     OpenFile(fileName, optionVector, stack);
   }
 
+  //Get the list
   while (optionName != "done" && optionName != "Done")
   {
     std::cout << "Enter your options. When finished, enter \"Done\"\n";
@@ -218,6 +223,7 @@ void ClearStack(std::stack<option> &stack, std::vector<option> &optionVector)
   }
 }
 
+//This is where the actual decision happens
 bool PickFavorites(std::vector<option> vctr, std::string &winnerName)
 {
   int max = FindMax(vctr);
@@ -338,23 +344,8 @@ int main()
   {
     BracketOptions(optionStack, winnerName);
   }
-  if (saveDataBool)
+  if (saveDataBool)//If the user wants to save the results of this decision
   {
-  /*  std::cout << "saveData commencing\n";
-    std::cout << std::to_string(optionVector.size()) << " elements" << std::endl;
-    std::cout << winnerName << std::endl;
-    for (int i = 0; i < optionVector.size(); i++)
-    {
-      std::cout << "i = " << i << std::endl;
-      std::cout << optionVector.at(i).GetName() << std::endl;
-      if (optionVector.at(i).GetName() == winnerName)
-      {
-        std::cout << "Winner found\n";
-        optionVector.at(i).IncrementNumWins();
-        i = optionVector.size();
-      }
-    }
-    std::cout << "Time to write to the file!\n";*/
     WriteFile(fileName, optionVector, winnerName);
   }
 
